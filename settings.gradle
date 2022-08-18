@@ -1,0 +1,4 @@
+rootProject.name = 'activeMQ'
+include 'application_1'
+include 'application_2'
+

@@ -1,0 +1,38 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.2'
+    id 'io.spring.dependency-management' version '1.0.12.RELEASE'
+    id 'java'
+    id 'war'
+}
+
+group = 'com.jms'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-activemq'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.apache.activemq:activemq-broker'
+    compileOnly 'com.fasterxml.jackson.core:jackson-databind'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation 'com.thoughtworks.xstream:xstream:1.4.10'
+    implementation 'org.springframework:spring-oxm:5.0.4.RELEASE'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

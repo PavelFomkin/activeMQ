@@ -1,6 +1,7 @@
 package com.jms.config;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
@@ -11,6 +12,13 @@ import org.springframework.jms.connection.CachingConnectionFactory;
 @EnableJms
 @Configuration
 public class JmsConfig {
+    @Value("${jms.login}")
+    private String login;
+    @Value("${jms.password}")
+    private String password;
+    @Value("${jms.host}")
+    private String host;
+
     @Bean
     public DefaultJmsListenerContainerFactory jmsContainerFactory() {
         DefaultJmsListenerContainerFactory containerFactory = new DefaultJmsListenerContainerFactory();
@@ -21,8 +29,7 @@ public class JmsConfig {
     @Bean
     public CachingConnectionFactory connectionFactory() {
         CachingConnectionFactory cachConnectionFactory = new CachingConnectionFactory();
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
-        connectionFactory.setBrokerURL("tcp://localhost:61616");
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(login, password, host);
         cachConnectionFactory.setTargetConnectionFactory(connectionFactory);
         return cachConnectionFactory;
     }

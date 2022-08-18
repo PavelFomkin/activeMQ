@@ -21,7 +21,6 @@ public class JmsConfig {
     @Bean
     public DefaultJmsListenerContainerFactory jmsContainerFactory() {
         DefaultJmsListenerContainerFactory containerFactory = new DefaultJmsListenerContainerFactory();
-        containerFactory.setPubSubDomain(true);
         containerFactory.setConnectionFactory(connectionFactory());
         return containerFactory;
     }
@@ -30,10 +29,9 @@ public class JmsConfig {
     public ActiveMQConnectionFactory connectionFactory() {
         return new ActiveMQConnectionFactory(login, password, host);
     }
+
     @Bean
-    public JmsTemplate jmsTemplateTopic() {
-        JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory());
-        jmsTemplate.setPubSubDomain(true);
-        return jmsTemplate;
+    public JmsTemplate jmsTemplate() {
+        return new JmsTemplate(connectionFactory());
     }
 }

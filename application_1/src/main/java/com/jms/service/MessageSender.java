@@ -12,16 +12,16 @@ import org.springframework.stereotype.Service;
 public class MessageSender {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageSender.class);
 
-    @Value("${jms.topic-name}")
-    private String topicName;
+    @Value("${jms.requestChanel}")
+    private String destination;
 
     @Autowired
     private JmsTemplate jmsTemplate;
 
     @SneakyThrows
     public void sendMessage(String message) {
-        jmsTemplate.convertAndSend(topicName, message);
+        jmsTemplate.convertAndSend(destination, message);
 
-        LOGGER.info("Message \"{}\" sent to: {}", message, topicName);
+        LOGGER.info("Message \"{}\" sent to: {}", message, destination);
     }
 }

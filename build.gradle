@@ -19,20 +19,6 @@ repositories {
 	mavenCentral()
 }
 
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-activemq'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.apache.activemq:activemq-broker'
-	compileOnly 'com.fasterxml.jackson.core:jackson-databind'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-	implementation 'com.thoughtworks.xstream:xstream:1.4.10'
-	implementation 'org.springframework:spring-oxm:5.0.4.RELEASE'
-}
-
 tasks.named('test') {
 	useJUnitPlatform()
 }

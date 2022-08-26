@@ -42,7 +42,6 @@ public class MessageReceiver {
         System.out.println("[2] listenerWithError: message processed: " + payload);
     }
 
-    @SneakyThrows
     @RabbitListener(
             bindings = @QueueBinding(
                     value = @Queue(name = "processedQueue", durable = "true"),
@@ -57,7 +56,6 @@ public class MessageReceiver {
         System.out.println("[1] listener: message processed: " + payload);
     }
 
-    @SneakyThrows
     @RabbitListener(
             bindings = @QueueBinding(
                     value = @Queue(name = "failureQueue", durable = "true"),

@@ -27,8 +27,11 @@ public class FailedMessageRepository implements InitializingBean, DisposableBean
     };
 
     public void save(FailedMessage failedMessage) {
-        jdbcTemplate.update("INSERT INTO failure_messages (exchange, routing_key, payload) VALUES (?, ?, ?)",
-                failedMessage.getExchange(), failedMessage.getRootingKey(), failedMessage.getPayload());
+        jdbcTemplate.update("INSERT INTO failure_messages (exchange, routing_key, payload, status) VALUES (?, ?, ?, ?)",
+                failedMessage.getExchange(),
+                failedMessage.getRootingKey(),
+                failedMessage.getPayload(),
+                failedMessage.getStatus());
     }
 
     public boolean exists(Integer id) {
@@ -53,8 +56,8 @@ public class FailedMessageRepository implements InitializingBean, DisposableBean
                 "id INT PRIMARY KEY AUTO_INCREMENT, " +
                 "exchange VARCHAR(20) NOT NULL, " +
                 "routing_key VARCHAR(20) NOT NULL, " +
-                "payload VARCHAR(100) NOT NULL, " +
-                "status VARCHAR(20) DEFAULT 'FAILED')");
+                "payload VARCHAR(2000) NOT NULL, " +
+                "status VARCHAR(20) DEFAULT 'NONE')");
     }
 
     @Override

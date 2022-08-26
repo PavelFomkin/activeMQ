@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString (exclude = "id")
 public class FailedMessage implements Serializable {
     private Integer id;
     private String exchange;

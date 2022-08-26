@@ -13,7 +13,11 @@ public class FailedMessageStorage {
     private FailedMessageRepository failedMessageRepository;
 
     public void saveMessage(FailedMessage failedMessage) {
-        failedMessageRepository.save(failedMessage);
+        try {
+            failedMessageRepository.save(failedMessage);
+        } catch (Exception e) {
+            System.err.println("Unable to save the message." + e.getMessage());
+        }
     }
 
     public List<FailedMessage> findAll() {

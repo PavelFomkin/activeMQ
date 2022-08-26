@@ -2,6 +2,10 @@ rabbitmq:
   retry:
     count: 3
     delay: 5000
+  dlq:
+    ttl: 10000
+  message:
+    max.length: 10
 spring:
   datasource:
     url: jdbc:h2:mem:mydb

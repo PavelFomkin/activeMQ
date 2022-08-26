@@ -3,9 +3,8 @@ package com.jms.service;
 import com.jms.entity.FailedMessage;
 import lombok.SneakyThrows;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.*;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,13 +21,7 @@ public class MessageReceiver {
     @Autowired
     private FailedMessageStorage storage;
 
-    @RabbitListener(
-            bindings = @QueueBinding(
-                    value = @Queue(name = "emptyQueue", durable = "true"),
-                    key = "message.test",
-                    exchange = @Exchange(name = "my.exchange", type = ExchangeTypes.TOPIC)
-            )
-    )
+    @RabbitListener(queues = "emptyQueue")
     public void listenerWithError(Message message) {
         String payload = new String(message.getBody(), StandardCharsets.UTF_8);
         if (!validateMessage(payload)) {
@@ -41,31 +34,28 @@ public class MessageReceiver {
     }
 
     @SneakyThrows
-    @RabbitListener(
-            bindings = @QueueBinding(
-                    value = @Queue(name = "processedQueue", durable = "true"),
-                    key = "message.test",
-                    exchange = @Exchange(name = "my.exchange", type = ExchangeTypes.TOPIC)
-            )
-    )
+    @RabbitListener(queues = "processedQueue")
     public void listener(Message message) {
         String payload = new String(message.getBody(), StandardCharsets.UTF_8);
 
         // processing...
+        Thread.sleep(1000);
         System.out.println("[1] listener: message processed: " + payload);
     }
 
-    @SneakyThrows
-    @RabbitListener(
-            bindings = @QueueBinding(
-                    value = @Queue(name = "failureQueue", durable = "true"),
-                    key = "message.failure",
-                    exchange = @Exchange(name = "failure.exchange")
-            )
-    )
-    public void failureListener(FailedMessage message) {
-        storage.saveMessage(message);
-        System.out.println("[3] failureListener: message \"" + message.getPayload() + "\" persisted.");
+    @RabbitListener(queues = "failureQueue")
+    public void failureListener(FailedMessage failedMessage) {
+        failedMessage.setStatus("FAILED");
+        storage.saveMessage(failedMessage);
+        System.out.println("[3] failureListener: message \"" + failedMessage + "\" persisted.");
+    }
+
+    @RabbitListener(queues = "deadLetterQueue")
+    public void deadLetterListener(Message message) {
+        FailedMessage failedMessage = FailedMessage.fromMessage(message);
+        failedMessage.setStatus("DEAD");
+        storage.saveMessage(failedMessage);
+        System.out.println("[4] deadLetterListener: message \"" + failedMessage + "\" persisted.");
     }
 
     @SneakyThrows

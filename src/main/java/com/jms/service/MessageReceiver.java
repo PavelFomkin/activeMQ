@@ -62,7 +62,7 @@ public class MessageReceiver {
             bindings = @QueueBinding(
                     value = @Queue(name = "failureQueue", durable = "true"),
                     key = "message.failure",
-                    exchange = @Exchange(name = "failure-exchange")
+                    exchange = @Exchange(name = "failure.exchange")
             )
     )
     public void failureListener(FailedMessage message) {
@@ -77,7 +77,7 @@ public class MessageReceiver {
         if (attemptNumber > numberOfAttempts) {
             System.err.println("[2] listenerWithError: Out of retry attempts. Message sent to failed message queue.");
 
-            template.convertAndSend("failure-exchange", "message.failure", FailedMessage.fromMessage(message));
+            template.convertAndSend("failure.exchange", "message.failure", FailedMessage.fromMessage(message));
             return;
         }
 

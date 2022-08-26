@@ -7,6 +7,6 @@ public class ServletInitializer extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(ActiveMqApplication1.class);
+		return application.sources(RabitMQApplication.class);
 	}
 }

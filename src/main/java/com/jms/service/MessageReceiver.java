@@ -17,8 +17,6 @@ public class MessageReceiver {
     private final static String ATTEMPT_NUMBER = "attemptNumber";
     @Value("${rabbitmq.retry.count}")
     private int numberOfAttempts;
-    @Value("${rabbitmq.retry.delay}")
-    private int delayTime;
     @Autowired
     private AmqpTemplate template;
     @Autowired
@@ -62,7 +60,7 @@ public class MessageReceiver {
             bindings = @QueueBinding(
                     value = @Queue(name = "failureQueue", durable = "true"),
                     key = "message.failure",
-                    exchange = @Exchange(name = "failure-exchange")
+                    exchange = @Exchange(name = "failure.exchange")
             )
     )
     public void failureListener(FailedMessage message) {
@@ -77,17 +75,14 @@ public class MessageReceiver {
         if (attemptNumber > numberOfAttempts) {
             System.err.println("[2] listenerWithError: Out of retry attempts. Message sent to failed message queue.");
 
-            template.convertAndSend("failure-exchange", "message.failure", FailedMessage.fromMessage(message));
+            template.convertAndSend("failure.exchange", "message.failure", FailedMessage.fromMessage(message));
             return;
         }
 
         System.out.println("[2] listenerWithError: Message could not be processed, sent to retry, attempt " + attemptNumber);
         message.getMessageProperties().setRedelivered(true);
         message.getMessageProperties().setHeader(ATTEMPT_NUMBER, attemptNumber);
-        Thread.sleep(delayTime);
-        template.convertAndSend(message.getMessageProperties().getReceivedExchange(),
-                message.getMessageProperties().getReceivedRoutingKey(),
-                message);
+        template.convertAndSend("delay.exchange", "message.delay", message);
     }
 
     public boolean validateMessage(String payload) {

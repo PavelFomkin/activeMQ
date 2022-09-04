@@ -21,6 +21,7 @@ public class KafkaConfig {
         properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, server);
         properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        properties.setProperty(ProducerConfig.ACKS_CONFIG, "all"); // provides "at-least-once" guarantee
 
         return new KafkaProducer<>(properties);
     }
@@ -35,6 +36,7 @@ public class KafkaConfig {
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
 
+        // at-most-once is default kafka consumer behaviour (with offsets)
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
         consumer.subscribe(Collections.singletonList(topic));
         return consumer;

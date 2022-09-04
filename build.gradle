@@ -21,12 +21,10 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-amqp'
-	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.apache.kafka:kafka-clients'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-	providedRuntime 'com.h2database:h2'
 	providedRuntime 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 }
 

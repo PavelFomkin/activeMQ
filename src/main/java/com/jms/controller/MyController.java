@@ -1,17 +1,17 @@
 package com.jms.controller;
 
-import com.jms.service.MyConsumer;
-import com.jms.service.MyProducer;
+import com.jms.consumer.MyConsumer;
+import com.jms.Producer.MyProducer;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 public class MyController {
     @Autowired
@@ -32,5 +32,11 @@ public class MyController {
     @GetMapping("/messages")
     public ResponseEntity<List<String>> getMessages() {
         return ResponseEntity.ok(consumer.getMessages());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    protected ResponseEntity<?> handleError(RuntimeException ex) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

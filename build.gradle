@@ -20,12 +20,15 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.apache.kafka:kafka-clients'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-	providedRuntime 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+//	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-web:2.5.2'
+	implementation 'org.apache.kafka:kafka-clients:3.2.1'
+	compileOnly 'org.projectlombok:lombok:1.18.24'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat:2.7.3'
+	providedRuntime 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.3'
+	implementation 'org.springframework:spring-tx:5.3.22'
+//	implementation 'org.springframework.kafka:spring-kafka:2.7.3'
 }
 
 tasks.named('test') {

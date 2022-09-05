@@ -16,6 +16,7 @@ import java.time.Duration;
 public class CarCoordinatesListener {
     @Autowired
     private CarTrackerManager manager;
+    // expected that we have 3 or more partitions!
     @Autowired
     private KafkaConsumer<String, CarCoordinates> consumer_1;
     @Autowired

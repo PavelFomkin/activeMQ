@@ -1,6 +1,6 @@
-package com.jms.Producer;
+package com.jms.producer;
 
-import com.jms.util.UnstableUtils;
+import com.jms.dto.CarCoordinates;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -12,18 +12,15 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MyProducer {
+public class CarCoordinatesKafkaProducer {
     @Autowired
-    private final KafkaProducer<String, String> producer;
-    @Value("${kafka.request.topic}")
+    private final KafkaProducer<String, CarCoordinates> producer;
+    @Value("${kafka.topic}")
     private String topic;
 
-    public void send(String message) {
+    public void send(CarCoordinates carCoordinates) {
         try {
-            producer.beginTransaction();
-            log.info("STARTED PRODUCER TRANSACTION");
-
-            ProducerRecord<String,String> record = new ProducerRecord<>(topic, message);
+            ProducerRecord<String, CarCoordinates> record = new ProducerRecord<>(topic, carCoordinates.getNumberplate(), carCoordinates);
             producer.send(record, (recordMetadata, e) -> {
                 if (e == null) {
                     log.info("Sent message. Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
@@ -32,14 +29,6 @@ public class MyProducer {
                     log.error("Error: " + e.getMessage());
                 }
             });
-            UnstableUtils.playWithFortuna();
-
-            producer.commitTransaction();
-            log.info("COMMITTED PRODUCER TRANSACTION");
-        } catch (Exception e) {
-            producer.abortTransaction();
-            log.info("ABORTED PRODUCER TRANSACTION");
-            throw new RuntimeException("Producer error");
         } finally {
             producer.flush();
         }

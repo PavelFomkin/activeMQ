@@ -21,6 +21,8 @@ public class MyConsumer {
 
     public List<String> getMessages() {
         ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
+        consumer.commitSync(); // at-most-once guarantee
+
         List<String> messages = new ArrayList<>();
         for (ConsumerRecord<String, String> record : records) {
             log.info("Partition: {}, Key: {}, Value: {}, Offset: {}", record.partition(), record.key(), record.value(), record.offset());
